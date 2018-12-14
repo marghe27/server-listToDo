@@ -1,0 +1,26 @@
+{
+  "name": "apilist",
+  "version": "1.1.0",
+  "description": "Server per esercizio con list ToDo ",
+  "main": "app.js",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "express": "^4.16.4",
+    "moment": "^2.22.2",
+    "second-list-todo": "^1.0.0",
+    "supertest": "^3.3.0",
+    "testmarghenut": "^0.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "Server",
+    "List"
+  ],
+  "author": "Margherita <marghe27@live.it>",
+  "license": "MIT"
+}
