@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 /// il mio file 
-var fakeList = require('fakelist-to-do');
+var fakeList = require('second-list-todo');
 
 
 var bodyparser = require('body-parser');
@@ -29,19 +29,40 @@ app.post('/list', function (req, res) {
 	
 });
 
+
+//GET lettura di tutti i ToDo tramite  il metodo getList ()
+app.get('/list', function (req, res) {
+	'use strict';
+	res.status(200).json(fakeList.getList());
+
+});
+
 //GET lettura di tutti i ToDo filtrata per utente e per completamento
 app.get('/list_filtered', function(req, res){
 	'use strict';
 	
     if (req.query.assignedTo) {
     	res.json(fakeList.searchAssigned(req.query.assignedTo));
-    } else if (req.query.completed) {
-    	res.json(fakeList.readByState(req.query.completed));
-    } else {
-    	res.json(fakeList.getUsers());
     }
 	
+	//else if (req.query.completed) {
+//    	res.json(fakeList.readByState(req.query.completed));
+//    } else {
+//    	res.json(fakeList.getUsers());
+//    }
+	
 });
+
+
+//GET lettura di tutti i ToDo completati
+app.get('/list_completed', function (req, res) {
+			'use strict';
+
+			if (req.query.completed) {
+				res.json(fakeList.readByState(req.query.completed));
+			}
+});
+
 
 //GET lettura di tutti gli utenti disponibili
 app.get('/users', function(req, res) {
@@ -60,17 +81,10 @@ app.put('/list/:id', function (req, res) {
 });
 	
 
-//GET lettura di tutti i ToDo filtrata per stato di completamento // spostare dentro un if, vedi sopra 
-//app.get('/list', function (req, res) {
-	//'use strict';
-	
-	//res.status(200).json();
-
-//});
 
 //DELETE Cancellazione di un ToDo
 
-app.delete('/list/:id', function (req, res) { 
+app.delete('/list_deleted/:id', function (req, res) { 
 	'use strict';
 	var i = parseInt(req.params.id);
 	res.json(fakeList.deleteList(i));
