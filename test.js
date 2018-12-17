@@ -11,7 +11,7 @@ describe('Testing del file app.js  ', function () {
 			.send({
 				name: 'Primo',
 				description: 'fare la spesa',
-				completed: false,
+				completed: 'false', /* non accetta il valore booleano */
 				assignedTo: 'Pippo'
 			})
 			.expect(201)
@@ -20,6 +20,7 @@ describe('Testing del file app.js  ', function () {
 				done();
 			});
 	});
+	
 	it('Sto aggiungendo ToDo', function (done) {
 		request(app)
 			.post('/list')
@@ -27,7 +28,7 @@ describe('Testing del file app.js  ', function () {
 			.send({
 				name: 'Secondo',
 				description: 'Completare progetto per cliente',
-				completed: true,
+				completed: 'true', /* non accetta il valore booleano */
 				assignedTo: 'Lorenza'
 			})
 			.expect(201)
@@ -45,52 +46,67 @@ describe('Testing del file app.js  ', function () {
 			.expect(200)
 			.end(function (err, res) {
 				if (err) return done(err);
-				assert.equal(res.body.length, 1)
+				assert.equal(res.body.length, 1);
 				done();
 			});
 	});
 	
-	/*/   DA CORREGGERE   /*/
+	/*/   Lettura di tutti i ToDo filtrata per stato di completamento /*/
 
-	it('Sto testando la lettura degli utenti', function (done) {
+it('Test lettura di tutti i ToDo filtrata per stato di completamento', function (done) {
+	request(app)
+		.get('/list_completed?completed=false')       
+		.set('Accept', 'application/json')
+		
+		.expect(200)
+		.end(function (err, res) {
+			if (err) return done(err);
+			assert.equal(res.body.length,1);
+			done();
+		});
+});
+	
+	
+	/*/   Lettura di tutti gli utenti disponibili (array _users di index.js) /*/
+
+	it('Sto testando la lettura di tutti gli utenti disponibili', function (done) {
 		request(app)
 			.get('/users')
 			.set('Accept', 'application/json')
 			.expect(200)
 			.end(function (err, res) {
 				if (err) return done(err);
-				//assert.equal(res.body.length, 2);/*/Sono 2 user inseriti/*/
+				assert.equal(res.body.length, 4); /*/Sono 4 users gli utenti nell'array _users di index.js /*/
 				done();
 			});
 	});
 	
-	/*/   DA CORREGGERE   /*/
-
-it('Test lettura di tutti i ToDo filtrata per stato di completamento', function (done) {
-	request(app)
-		.get('/list_filtered?completed=false')
-		.set('Accept', 'application/json')
-		
-		.expect(200)
-		.end(function (err, res) {
-			if (err) return done(err);
-			//assert.equal(res.body.length, 1)
-			done();
-		});
-});
+	/* /*   Sto testando il funzionamento della API che legge tutti i ToDo tramite  il metodo getList ()    **/ 
+	it('Sto testando la lettura della LIST tramite  il metodo getList () ', function (done) {
+		request(app)
+			.get('/list')
+			.set('Accept', 'application/json')
+			.expect(200)
+			.end(function (err, res) {
+				if (err) return done(err);
+				assert.equal(res.body.length, 2);  /*/Sono 2 i ToDo inseriti nel body /*/
+				done();
+			});
+	});
+	
 	
 	/*/   DA CORREGGERE   /*/
 	
 	it('Test di cancellazione di un ToDo', function (done) {
 		request(app)
-			.delete('/list/:id')
+			.delete('/list_deleted/0')
 			.set('Accept', 'application/json')
-			.send({
-				id: 1
-			})
+			//.send({ 
+//				id: 3
+//			})
 			.end(function (err, res) {
 				if (err) return done(err);
-				//assert.equal(res.body.length, 1)
+				assert.equal(res.body.length, 1);
 				done();
 			});
 	});
